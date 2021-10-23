@@ -10,8 +10,8 @@
              :refer [format-middleware]
              :rename {format-middleware muuntaja-format-middleware}]
             [muuntaja.core]
-
-            [kasta-test-task.api :as api]))
+            [kasta-test-task.api :as api])
+  (:gen-class))
 
 (def routes
   [["/api"
