@@ -26,7 +26,11 @@
                       :parameters {:query ::api/filter-retrieve-query}
                       :query-params ::api/filter-retrieve-query
                       :responses {200 {:body ::api/filter-get-output}
-                                  404 {:body string?}}}}]]
+                                  404 {:body string?}}}
+                :delete {:handler api/filter-delete
+                         :parameters {:body ::api/filter-delete-input}
+                         :responses {204 {:body string?}
+                                     404 {:body string?}}}}]]
    ["" {:no-doc true}
     ["/swagger/*" {:get (swagger-ui/create-swagger-ui-handler)}]
     ["/swagger.json" {:get (swagger/create-swagger-handler)}]]])

@@ -1,7 +1,8 @@
 (ns kasta-test-task.api
   (:require [clojure.spec.alpha :as s]
             [ring.util.response :refer [response bad-request not-found]]
-            [kasta-test-task.services :as services]))
+            [kasta-test-task.services :as services]
+            [kasta-test-task.utils :refer [no-content]]))
 
 (s/def ::status string?)
 (s/def ::status-output (s/keys :req-un [::status]))
@@ -37,3 +38,10 @@
       (let [filter (services/get-filter id)]
         (if filter (response (coerce-filter filter)) (not-found "Filter not found")))
       (response (map coerce-filter (services/list-filters))))))
+
+(s/def ::filter-delete-input (s/keys :req-un [::id]))
+(defn filter-delete [request]
+  (let [id (get-in request [:parameters :body :id])]
+    (if (services/delete-filter id)
+      (no-content "Filter deleted.")
+      (not-found "Filter not found."))))
