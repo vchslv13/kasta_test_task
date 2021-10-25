@@ -8,6 +8,11 @@
 (defn status [_]
   (response {:status "OK"}))
 
+(defn coerce-filter
+  "Workaround for output as I was not able to turn on response coercion."
+  [filter]
+  (update filter :_id str))
+
 (s/def ::_id string?)
 (s/def ::topic string?)
 (s/def ::q string?)
@@ -17,5 +22,9 @@
   (let [filter-data (get-in request [:parameters :body])
         filter (services/create-filter filter-data)]
     (if filter
-      (response (update filter :_id str))
+      (response (coerce-filter filter))
       (bad-request "Filter already exist."))))
+
+(s/def ::filter-list-output (s/coll-of ::filter-create-output :into []))
+(defn filter-list [request]
+  (response (map coerce-filter (services/list-filters))))

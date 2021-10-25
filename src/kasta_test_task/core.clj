@@ -20,7 +20,9 @@
     ["/filter/" {:post {:handler api/filter-create
                         :parameters {:body ::api/filter-create-input}
                         :responses {200 {:body ::api/filter-create-output}
-                                    400 {:body string?}}}}]]
+                                    400 {:body string?}}}
+                 :get {:handler api/filter-list
+                       :responses {200 {:body ::api/filter-list-output}}}}]]
    ["" {:no-doc true}
     ["/swagger/*" {:get (swagger-ui/create-swagger-ui-handler)}]
     ["/swagger.json" {:get (swagger/create-swagger-handler)}]]])
