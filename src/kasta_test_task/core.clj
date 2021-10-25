@@ -20,7 +20,7 @@
                        :responses {200 {:body ::api/status-output}}}}]
     ["/filter" {:post {:handler api/filter-create
                        :parameters {:body ::api/filter-create-input}
-                       :responses {200 {:body ::api/filter-create-output}
+                       :responses {201 {:body ::api/filter-create-output}
                                    400 {:body string?}}}
                 :get {:handler api/filter-list
                       :parameters {:query ::api/filter-retrieve-query}
