@@ -1,6 +1,6 @@
 (ns kasta-test-task.api
   (:require [clojure.spec.alpha :as s]
-            [ring.util.response :refer [response bad-request]]
+            [ring.util.response :refer [response bad-request not-found]]
             [kasta-test-task.services :as services]))
 
 (s/def ::status string?)
@@ -25,6 +25,15 @@
       (response (coerce-filter filter))
       (bad-request "Filter already exist."))))
 
+(s/def ::id string?)
+(s/def ::messages (s/coll-of map? :into []))
+(s/def ::filter-retrieve-query (s/keys :opt-un [::id]))
+(s/def ::filter-retrieve-output (s/keys :req-un [::topic ::q ::_id ::messages]))
 (s/def ::filter-list-output (s/coll-of ::filter-create-output :into []))
+(s/def ::filter-get-output (s/or :list ::filter-list-output :retrieve ::filter-retrieve-output))
 (defn filter-list [request]
-  (response (map coerce-filter (services/list-filters))))
+  (let [id (get-in request [:parameters :query :id])]
+    (if id
+      (let [filter (services/get-filter id)]
+        (if filter (response (coerce-filter filter)) (not-found "Filter not found")))
+      (response (map coerce-filter (services/list-filters))))))

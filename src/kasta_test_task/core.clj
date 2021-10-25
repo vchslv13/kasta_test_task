@@ -6,6 +6,7 @@
             [reitit.swagger :as swagger]
             [reitit.swagger-ui :as swagger-ui]
             [reitit.coercion.spec]
+            [reitit.ring.middleware.parameters :refer [parameters-middleware]]
             [reitit.ring.middleware.muuntaja
              :refer [format-middleware]
              :rename {format-middleware muuntaja-format-middleware}]
@@ -17,12 +18,15 @@
   [["/api"
     ["/status/" {:get {:handler api/status
                        :responses {200 {:body ::api/status-output}}}}]
-    ["/filter/" {:post {:handler api/filter-create
-                        :parameters {:body ::api/filter-create-input}
-                        :responses {200 {:body ::api/filter-create-output}
-                                    400 {:body string?}}}
-                 :get {:handler api/filter-list
-                       :responses {200 {:body ::api/filter-list-output}}}}]]
+    ["/filter" {:post {:handler api/filter-create
+                       :parameters {:body ::api/filter-create-input}
+                       :responses {200 {:body ::api/filter-create-output}
+                                   400 {:body string?}}}
+                :get {:handler api/filter-list
+                      :parameters {:query ::api/filter-retrieve-query}
+                      :query-params ::api/filter-retrieve-query
+                      :responses {200 {:body ::api/filter-get-output}
+                                  404 {:body string?}}}}]]
    ["" {:no-doc true}
     ["/swagger/*" {:get (swagger-ui/create-swagger-ui-handler)}]
     ["/swagger.json" {:get (swagger/create-swagger-handler)}]]])
@@ -31,6 +35,7 @@
   {:data {:coercion reitit.coercion.spec/coercion
           :muuntaja muuntaja.core/instance
           :middleware [muuntaja-format-middleware
+                       parameters-middleware
                        coercion/coerce-exceptions-middleware
                        coercion/coerce-request-middleware
                        coercion/coerce-response-middleware]}})
