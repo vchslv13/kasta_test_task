@@ -16,7 +16,11 @@
 (def routes
   [["/api"
     ["/status/" {:get {:handler api/status
-                       :responses {200 {:body ::api/status-output}}}}]]
+                       :responses {200 {:body ::api/status-output}}}}]
+    ["/filter/" {:post {:handler api/filter-create
+                        :parameters {:body ::api/filter-create-input}
+                        :responses {200 {:body ::api/filter-create-output}
+                                    400 {:body string?}}}}]]
    ["" {:no-doc true}
     ["/swagger/*" {:get (swagger-ui/create-swagger-ui-handler)}]
     ["/swagger.json" {:get (swagger/create-swagger-handler)}]]])

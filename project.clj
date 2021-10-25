@@ -9,7 +9,10 @@
                  [ring/ring-core "1.9.3"]
                  [ring/ring-json "0.5.1"]
                  [http-kit "2.5.3"]
-                 [metosin/reitit "0.5.13"]]
+                 [metosin/reitit "0.5.13"]
+                 [com.novemberain/monger "3.1.0"]
+                 [environ "1.2.0"]]
+  :plugins [[lein-environ "1.2.0"]]
   :main ^:skip-aot kasta-test-task.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
