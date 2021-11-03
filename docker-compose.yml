@@ -7,6 +7,7 @@ services:
       - 8080:8080
     depends_on:
       - mongo
+      - kafka
 
   mongo:
     image: mongo
@@ -18,18 +19,22 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: pass
 
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: confluentinc/cp-zookeeper
     ports:
       - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
-    image: wurstmeister/kafka
+    image: confluentinc/cp-kafka
     ports:
-      - 9092:9092
       - 29092:29092
+    depends_on:
+      - zookeeper
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      KAFKA_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://kafka:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
