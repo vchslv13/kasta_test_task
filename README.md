@@ -1,17 +1,16 @@
 # kasta-test-task
 
-FIXME: description
+Test task done according to Kasta team requirements:
+https://hackmd.io/@2QX6eXGqSJu70zPB776X9Q/rJdSetNhM
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Clone the repo with
+
+    $ git clone git@github.com:vchslv13/kasta_test_task.git
 
 ## Usage
 
-FIXME: explanation
+Run the app in docker compose with
 
-    $ java -jar kasta-test-task-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
+    $ docker-compose up
