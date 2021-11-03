@@ -42,7 +42,6 @@
         (let [old-topics @topics
               messages (jc/poll consumer 500)
               new-topics @topics]
-          (prn messages)
           (process-messages (map :value messages))
           (when (not= old-topics new-topics)
             (jc/subscribe consumer @topics)))))))
