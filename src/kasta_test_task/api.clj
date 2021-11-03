@@ -27,10 +27,11 @@
       (bad-request "Filter already exist."))))
 
 (s/def ::id string?)
-(s/def ::messages (s/coll-of map? :into []))
+(s/def ::messages (s/coll-of string? :into []))
 (s/def ::filter-retrieve-query (s/keys :opt-un [::id]))
-(s/def ::filter-retrieve-output (s/keys :req-un [::topic ::q ::_id ::messages]))
-(s/def ::filter-list-output (s/coll-of ::filter-create-output :into []))
+(s/def ::filter-retrieve-output (s/keys :req-un [::topic ::q ::_id]))
+(s/def ::filter-list-item (s/keys :req-un [::topic ::q ::_id]))
+(s/def ::filter-list-output (s/coll-of ::filter-list-item :into []))
 (s/def ::filter-get-output (s/or :list ::filter-list-output :retrieve ::filter-retrieve-output))
 (defn filter-list [request]
   (let [id (get-in request [:parameters :query :id])]

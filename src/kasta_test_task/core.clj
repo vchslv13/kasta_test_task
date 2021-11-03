@@ -11,7 +11,8 @@
              :refer [format-middleware]
              :rename {format-middleware muuntaja-format-middleware}]
             [muuntaja.core]
-            [kasta-test-task.api :as api])
+            [kasta-test-task.api :as api]
+            [kasta-test-task.consumer :refer [consumer]])
   (:gen-class))
 
 (def routes
@@ -51,5 +52,6 @@
    (ring/create-default-handler)))
 
 (defn -main [& args]
+  (consumer)
   (let [handler (wrap-reload #'app)]
     (run-server handler {:port 8080})))

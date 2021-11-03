@@ -1,7 +1,9 @@
 (ns kasta-test-task.services
   (:require [kasta-test-task.config :as config]
+            [kasta-test-task.topics :refer [add-topic]]
             [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [monger.operators :refer [$push]])
   (:import org.bson.types.ObjectId))
 
 (defn db []
@@ -15,10 +17,12 @@
   (let [db (db)
         coll "filters"]
     (when-not (mc/any? db coll filter)
-      (mc/insert-and-return db coll (with-id filter)))))
+      (let [created (mc/insert-and-return db coll (with-id filter))]
+        (add-topic created)
+        created))))
 
 (defn list-filters []
-  (mc/find-maps (db) "filters"))
+  (mc/find-maps (db) "filters" {} [:q :topic]))
 
 (defn get-filter [id]
   (let [filter (mc/find-map-by-id (db) "filters" (ObjectId. id))]
@@ -30,3 +34,6 @@
   (let [result (mc/remove-by-id (db) "filters" (ObjectId. id))
         nRemoved (.getN result)]
     (not (zero? nRemoved))))
+
+(defn add-message [ids message]
+  (mc/update-by-ids (db) "filters" ids {$push {:messages message}}))
